@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using FlightControlApi.Models;
 using NHibernate;
+using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
 
@@ -19,9 +20,9 @@ namespace FlightControlApi.Controllers
         public IEnumerable<Pilot> Get()
         {
             IEnumerable<Pilot> pilots;
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+            using (ISession session = NHibernateSession.OpenSession())  
             {
-                pilots = session.Query<Pilot>().ToList(); //  Querying to get all the books
+                pilots = session.Query<Pilot>().ToList(); 
             }
             return pilots;
         }
@@ -31,9 +32,9 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Get(Int64 id)
         {
             Pilot pilot;
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+            using (ISession session = NHibernateSession.OpenSession())  
             {
-                pilot = session.Get<Pilot>(id); //  Querying to get all the books
+                pilot = session.Get<Pilot>(id); 
             }
             if (pilot == null)
             {
@@ -60,17 +61,41 @@ namespace FlightControlApi.Controllers
             }
             pilot.Active = true;
            
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+            using (ISession session = NHibernateSession.OpenSession())  
             {
                 session.Save(pilot);
             }
             return Ok(pilot);
         }
 
-        [HttpDelete]
+        [HttpPut]
         [Route("pilot/{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(Int64 id, [FromBody]Pilot pilot)
         {
+            Pilot oldPilot;
+            pilot.Id = id;
+          
+
+                using (ISession session = NHibernateSession.OpenSession())  
+            {
+                session.Transaction.Begin();
+                 oldPilot = session.Load<Pilot>(id);
+                
+                oldPilot = pilot;
+
+                session.Update(oldPilot);
+                try
+                {
+                    session.Transaction.Commit();
+                } catch (NHibernate.StaleStateException exception)
+                {
+                    session.Transaction.Dispose();
+                    return NotFound();
+                }
+            }
+            
+
+            return Ok(oldPilot);
         }
 
         [HttpDelete]
@@ -78,10 +103,13 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
             
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+            using (ISession session = NHibernateSession.OpenSession())  
             {
                 Pilot pilot = session.Get<Pilot>(id);
-                
+                if (pilot == null)
+                {
+                    return NotFound();
+                }
                 session.Delete(pilot);
 
                 session.Flush();

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="FlightControlApi" namespace="FlightControlApi.Models">
+  <class name="Country" table="country" dynamic-update="true" >
+    <cache usage="read-write"/>
+    <id name="Id" column="id" type="long">
+      <generator class="native" />
+    </id>
+
+    <property name="iso"  />
+    <property name="name" />
+    <property name="printable_name" />
+    <property name="iso3" />
+    <property name="numcode" />
+   
+    
+  </class>
+</hibernate-mapping>
