@@ -23,6 +23,10 @@ namespace FlightControlApi
             var routeVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\RouteVM.hbm.xml");
             var flightConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Flight.hbm.xml");
             var flightVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\FlightVM.hbm.xml");
+            var storeConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Store.hbm.xml");
+            var storeVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\StoreVM.hbm.xml");
+            var passengerConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Passenger.hbm.xml");
+            var passengerVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\PassengerVM.hbm.xml");
             configuration.AddFile(pilotConfigurationFile);
             configuration.AddFile(planeConfigurationFile);
             configuration.AddFile(countryConfigurationFile);
@@ -32,6 +36,10 @@ namespace FlightControlApi
             configuration.AddFile(routeVMConfigurationFile);
             configuration.AddFile(flightConfigurationFile);
             configuration.AddFile(flightVMConfigurationFile);
+            configuration.AddFile(storeConfigurationFile);
+            configuration.AddFile(storeVMConfigurationFile);
+            configuration.AddFile(passengerConfigurationFile);
+            configuration.AddFile(passengerVMConfigurationFile);
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             return sessionFactory.OpenSession();
         }
