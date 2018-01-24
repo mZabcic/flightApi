@@ -9,12 +9,8 @@
     <property name="Name"  />
     <property name="Address" />
     <property name="ZipCode" />
-    <property name="Location" />
     <property name="CountryId" />
-    <set name="Country" inverse="true" cascade="save-update">
-      <key column="CountryId"  not-null="true"/>
-      <one-to-many class="Country" />
-    </set>
+
 
   </class>
 </hibernate-mapping>

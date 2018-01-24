@@ -25,6 +25,7 @@ namespace FlightControlApi.Areas.HelpPage.Controllers
 
         public HttpConfiguration Configuration { get; private set; }
 
+       
         public ActionResult Index()
         {
             ViewBag.DocumentationProvider = Configuration.Services.GetDocumentationProvider();

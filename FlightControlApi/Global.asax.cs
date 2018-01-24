@@ -4,15 +4,27 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using NHibernate;
+using NHibernate.Cfg;
+using NHibernate.Mapping.ByCode;
+using System.Reflection;
+using NHibernate.Cfg.MappingSchema;
 
 namespace FlightControlApi
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        
+      
+        
+
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+= Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
         }
+       
     }
 }

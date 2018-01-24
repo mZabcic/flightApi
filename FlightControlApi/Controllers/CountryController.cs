@@ -12,6 +12,10 @@ namespace FlightControlApi.Controllers
 {
     public class CountryController : ApiController
     {
+
+        ISession session;
+
+    
         [HttpGet]
         [Route("country")]
         public IEnumerable<Country> Get()

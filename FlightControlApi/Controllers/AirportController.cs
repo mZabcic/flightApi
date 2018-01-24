@@ -9,22 +9,25 @@ using NHibernate;
 using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
+using NHibernate.Spatial.Type;
+using NetTopologySuite.Geometries;
+using NHibernate.Exceptions;
 
 namespace FlightControlApi.Controllers
 {
     public class AirportController : ApiController
     {
 
-        ISession session = NHibernateSession.OpenSession();
 
         [HttpGet]
         [Route("airport")]
-        public IEnumerable<Airport> Get()
+        public IEnumerable<AirportVM> Get()
         {
-            IEnumerable<Airport> airports;
-           
-                airports = session.Query<Airport>().ToList();
-            
+            IEnumerable<AirportVM> airports;
+            using (ISession session = NHibernateSession.OpenSession())
+            {
+                airports = session.Query<AirportVM>().ToList();
+            }
 
             return airports;
         }
@@ -33,10 +36,10 @@ namespace FlightControlApi.Controllers
         [Route("airport/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            Airport airport;
+            AirportVM airport;
             using (ISession session = NHibernateSession.OpenSession())
             {
-                airport = session.Get<Airport>(id);
+                airport = session.Get<AirportVM>(id);
             }
             if (airport == null)
             {
@@ -45,10 +48,25 @@ namespace FlightControlApi.Controllers
             return Ok(airport);
         }
 
+
+        [HttpGet]
+        [Route("airport/country/{id}")]
+        public IHttpActionResult GetByCountry(Int64 id)
+        {
+            IEnumerable<AirportVM> airports;
+            using (ISession session = NHibernateSession.OpenSession())
+            {
+                airports = session.Query<AirportVM>().Where(p => p.CountryId == id).ToList();
+            }
+
+            return Ok(airports);
+        }
+
         [HttpPost]
         [Route("airport")]
         public IHttpActionResult Post([FromBody]Airport airport)
         {
+            
             if (airport.Name == null)
             {
                 return BadRequest("Name is required");
@@ -65,14 +83,10 @@ namespace FlightControlApi.Controllers
             {
                 return BadRequest("CountryId is required");
             }
-            airport.Location = new NHibernate.Spatial.Type.MsSql2008GeographyType();
-          
-            if (airport.Location == null)
+            if (!AirportController.CheckCountry(airport.CountryId))
             {
-                return BadRequest("Location is required");
+                return BadRequest("CountryId is wrong");
             }
-
-
 
 
             using (ISession session = NHibernateSession.OpenSession())
@@ -88,16 +102,19 @@ namespace FlightControlApi.Controllers
         {
             Airport oldAirport;
             airport.Id = id;
+            if (!AirportController.CheckCountry(airport.CountryId))
+            {
+                return BadRequest("CountryId is wrong");
+            }
 
 
             using (ISession session = NHibernateSession.OpenSession())
             {
                 session.Transaction.Begin();
                 oldAirport = session.Load<Airport>(id);
-                airport.Location = oldAirport.Location;
                 oldAirport = airport;
-
-                session.Update(oldAirport);
+                 session.Update(oldAirport);
+               
                 try
                 {
                     session.Transaction.Commit();
@@ -107,6 +124,7 @@ namespace FlightControlApi.Controllers
                     session.Transaction.Dispose();
                     return NotFound();
                 }
+               
             }
 
 
@@ -120,6 +138,11 @@ namespace FlightControlApi.Controllers
 
             using (ISession session = NHibernateSession.OpenSession())
             {
+                int count = session.Query<Route>().Where(c => c.FromId == id || c.DestinationId == id).Count();
+                if (count > 0)
+                {
+                    return Conflict();
+                }
                 Airport airport = session.Get<Airport>(id);
                 if (airport == null)
                 {
@@ -131,6 +154,16 @@ namespace FlightControlApi.Controllers
             }
             return Ok();
 
+        }
+
+        private static bool CheckCountry(Int64 id)
+        {
+            int count;
+            using (ISession session = NHibernateSession.OpenSession())
+            {
+                count = session.Query<Country>().Where(p => p.Id == id).Count();
+            }
+            return count > 0;
         }
 
 
