@@ -150,6 +150,9 @@
     <Content Include="Mappings\Plane.hbm.xml" />
     <Content Include="Mappings\Route.hbm.xml" />
     <Content Include="Mappings\RouteVM.hbm.xml" />
+    <Content Include="Mappings\Seat.hbm.xml" />
+    <Content Include="Mappings\SeatClass.hbm.xml" />
+    <Content Include="Mappings\SeatVM.hbm.xml" />
     <Content Include="Mappings\Store.hbm.xml" />
     <Content Include="Mappings\StoreVM.hbm.xml" />
     <Content Include="Models\hibernate.cfg.xml" />
@@ -192,6 +195,7 @@
     <Compile Include="Controllers\PilotController.cs" />
     <Compile Include="Controllers\PlaneController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
+    <Compile Include="Controllers\SeatController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,6 +212,9 @@
     <Compile Include="Models\Plane.cs" />
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\RouteVM.cs" />
+    <Compile Include="Models\Seat.cs" />
+    <Compile Include="Models\SeatClass.cs" />
+    <Compile Include="Models\SeatVM.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreVM.cs" />
     <Compile Include="NhibernateSession.cs" />

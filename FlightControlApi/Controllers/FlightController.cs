@@ -214,7 +214,7 @@ namespace FlightControlApi.Controllers
             int count;
             using (ISession session = NHibernateSession.OpenSession())
             {
-                count = session.Query<Plane>().Where(p => p.Id == id).Count();
+                count = session.Query<Plane>().Where(p => p.Id == id && p.Active == 1).Count();
             }
             return count > 0;
         }
