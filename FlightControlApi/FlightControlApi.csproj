@@ -143,6 +143,8 @@
     <Content Include="Mappings\Airport.hbm.xml" />
     <Content Include="Mappings\AirportVM.hbm.xml" />
     <Content Include="Mappings\Country.hbm.xml" />
+    <Content Include="Mappings\Flight.hbm.xml" />
+    <Content Include="Mappings\FlightVM.hbm.xml" />
     <Content Include="Mappings\Plane.hbm.xml" />
     <Content Include="Mappings\Route.hbm.xml" />
     <Content Include="Mappings\RouteVM.hbm.xml" />
@@ -190,6 +192,10 @@
     </Compile>
     <Compile Include="Models\Airport.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Controllers\FlightController.cs" />
+    <Compile Include="Models\Flight.cs" />
+    <Compile Include="Models\FlightCreator.cs" />
+    <Compile Include="Models\FlightVM.cs" />
     <Compile Include="Models\Pilot.cs" />
     <Compile Include="Models\Plane.cs" />
     <Compile Include="Models\Route.cs" />

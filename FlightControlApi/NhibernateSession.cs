@@ -21,6 +21,8 @@ namespace FlightControlApi
             var routeConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Route.hbm.xml");
             var airportVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\AirportVM.hbm.xml");
             var routeVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\RouteVM.hbm.xml");
+            var flightConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Flight.hbm.xml");
+            var flightVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\FlightVM.hbm.xml");
             configuration.AddFile(pilotConfigurationFile);
             configuration.AddFile(planeConfigurationFile);
             configuration.AddFile(countryConfigurationFile);
@@ -28,6 +30,8 @@ namespace FlightControlApi
             configuration.AddFile(routeConfigurationFile);
             configuration.AddFile(airportVMConfigurationFile);
             configuration.AddFile(routeVMConfigurationFile);
+            configuration.AddFile(flightConfigurationFile);
+            configuration.AddFile(flightVMConfigurationFile);
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             return sessionFactory.OpenSession();
         }

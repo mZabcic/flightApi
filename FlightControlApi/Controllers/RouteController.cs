@@ -81,6 +81,14 @@ namespace FlightControlApi.Controllers
         {
             Route oldRoute;
             route.Id = id;
+            if (!RouteController.CheckAirport(route.DestinationId))
+            {
+                return BadRequest("DestinationId is wrong");
+            }
+            if (!RouteController.CheckAirport(route.FromId))
+            {
+                return BadRequest("FromId is wrong");
+            }
 
 
             using (ISession session = NHibernateSession.OpenSession())
