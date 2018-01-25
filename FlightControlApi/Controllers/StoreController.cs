@@ -139,11 +139,11 @@ namespace FlightControlApi.Controllers
 
             using (ISession session = NHibernateSession.OpenSession())
             {
-              /*  int count = session.Query<Store>().Where(c => c.FromId == id || c.DestinationId == id).Count();
+                int count = session.Query<Ticket>().Where(c => c.StoreId == id).Count();
                 if (count > 0)
                 {
                     return Conflict();
-                } */
+                } 
                 Store store = session.Get<Store>(id);
                 if (store == null)
                 {
