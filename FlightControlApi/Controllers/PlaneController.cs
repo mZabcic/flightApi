@@ -92,6 +92,7 @@ namespace FlightControlApi.Controllers
             Plane oldPlane;
             using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
             {
+                session.Transaction.Begin();
                 oldPlane = session.Load<Plane>(id);
                 oldPlane.Active = 0;
 
@@ -115,9 +116,9 @@ namespace FlightControlApi.Controllers
         {
             using (ISession session = NHibernateSession.OpenSession()) { 
                Int64 curNum = 1;
-            for (Int64 i = 0; i < plane.EconomyCapacity; i++)
+            for (Int64 i = 0; i < plane.FirstClassCapacity; i++)
             {
-                Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 1 };
+                Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 3 };
                     session.Save(seat);
                     curNum++;
             }
@@ -127,9 +128,9 @@ namespace FlightControlApi.Controllers
                     session.Save(seat);
                     curNum++;
             }
-            for (Int64 i = 0; i < plane.FirstClassCapacity; i++)
+            for (Int64 i = 0; i < plane.EconomyCapacity; i++)
             {
-                Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 3 };
+                Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 1 };
                     session.Save(seat);
                     curNum++;
             }

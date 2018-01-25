@@ -145,6 +145,7 @@
     <Content Include="Mappings\Country.hbm.xml" />
     <Content Include="Mappings\Flight.hbm.xml" />
     <Content Include="Mappings\FlightVM.hbm.xml" />
+    <Content Include="Mappings\FlightWithTickets.hbm.xml" />
     <Content Include="Mappings\Passenger.hbm.xml" />
     <Content Include="Mappings\PassengerVM.hbm.xml" />
     <Content Include="Mappings\Plane.hbm.xml" />
@@ -155,6 +156,9 @@
     <Content Include="Mappings\SeatVM.hbm.xml" />
     <Content Include="Mappings\Store.hbm.xml" />
     <Content Include="Mappings\StoreVM.hbm.xml" />
+    <Content Include="Mappings\Ticket.hbm.xml" />
+    <Content Include="Mappings\TicketCreator.hbm.xml" />
+    <Content Include="Mappings\TicketVM.hbm.xml" />
     <Content Include="Models\hibernate.cfg.xml" />
     <Content Include="Mappings\Pilot.hbm.xml" />
     <Content Include="Web.config" />
@@ -197,6 +201,7 @@
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SeatController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -206,6 +211,7 @@
     <Compile Include="Models\Flight.cs" />
     <Compile Include="Models\FlightCreator.cs" />
     <Compile Include="Models\FlightVM.cs" />
+    <Compile Include="Models\FlightWithTickets.cs" />
     <Compile Include="Models\Passenger.cs" />
     <Compile Include="Models\PassengerVM.cs" />
     <Compile Include="Models\Pilot.cs" />
@@ -217,6 +223,9 @@
     <Compile Include="Models\SeatVM.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreVM.cs" />
+    <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\TicketCreator.cs" />
+    <Compile Include="Models\TicketVM.cs" />
     <Compile Include="NhibernateSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\AirportVM.cs" />

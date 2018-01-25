@@ -31,10 +31,10 @@ namespace FlightControlApi.Controllers
         [Route("flight/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            FlightVM flight;
+            FlightWithTickets flight;
             using (ISession session = NHibernateSession.OpenSession())
             {
-                flight = session.Get<FlightVM>(id);
+                flight = session.Get<FlightWithTickets>(id);
             }
             if (flight == null)
             {
@@ -183,17 +183,24 @@ namespace FlightControlApi.Controllers
         [Route("flight/{id}")]
         public IHttpActionResult Delete(Int64 id)
         {
-
+            Flight flight;
             using (ISession session = NHibernateSession.OpenSession())
             {
-                Flight flight = session.Get<Flight>(id);
-                if (flight == null)
+                session.Transaction.Begin();
+                flight = session.Load<Flight>(id);
+                flight.Canceled = true;
+
+                session.Update(flight);
+                try
                 {
+                    session.Transaction.Commit();
+                }
+                catch (NHibernate.StaleStateException exception)
+                {
+                    session.Transaction.Dispose();
                     return NotFound();
                 }
-                session.Delete(flight);
 
-                session.Flush();
             }
             return Ok();
 

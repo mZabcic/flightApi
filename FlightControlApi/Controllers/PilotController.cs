@@ -102,17 +102,24 @@ namespace FlightControlApi.Controllers
         [Route("pilot/{id}")]
         public IHttpActionResult Delete(Int64 id)
         {
-            
+            Pilot pilot;
             using (ISession session = NHibernateSession.OpenSession())  
             {
-                Pilot pilot = session.Get<Pilot>(id);
-                if (pilot == null)
+                session.Transaction.Begin();
+                pilot = session.Load<Pilot>(id);
+                pilot.Active = false;
+
+                session.Update(pilot);
+                try
                 {
+                    session.Transaction.Commit();
+                }
+                catch (NHibernate.StaleStateException exception)
+                {
+                    session.Transaction.Dispose();
                     return NotFound();
                 }
-                session.Delete(pilot);
 
-                session.Flush();
             }
             return Ok();
 

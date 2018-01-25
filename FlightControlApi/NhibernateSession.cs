@@ -22,6 +22,7 @@ namespace FlightControlApi
             var airportVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\AirportVM.hbm.xml");
             var routeVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\RouteVM.hbm.xml");
             var flightConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Flight.hbm.xml");
+            var flightWithTicketsConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\FlightWithTickets.hbm.xml");
             var flightVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\FlightVM.hbm.xml");
             var storeConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Store.hbm.xml");
             var storeVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\StoreVM.hbm.xml");
@@ -30,6 +31,9 @@ namespace FlightControlApi
             var seatClassConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\SeatClass.hbm.xml");
             var seatConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Seat.hbm.xml");
             var seatVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\SeatVM.hbm.xml");
+            var ticketConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\Ticket.hbm.xml");
+            var ticketVMConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\TicketVM.hbm.xml");
+            var ticketCreatorConfigurationFile = HttpContext.Current.Server.MapPath(@"~\Mappings\TicketCreator.hbm.xml");
             configuration.AddFile(pilotConfigurationFile);
             configuration.AddFile(planeConfigurationFile);
             configuration.AddFile(countryConfigurationFile);
@@ -46,6 +50,10 @@ namespace FlightControlApi
             configuration.AddFile(seatClassConfigurationFile);
             configuration.AddFile(seatConfigurationFile);
             configuration.AddFile(seatVMConfigurationFile);
+            configuration.AddFile(ticketConfigurationFile);
+            configuration.AddFile(ticketVMConfigurationFile);
+            configuration.AddFile(ticketCreatorConfigurationFile);
+            configuration.AddFile(flightWithTicketsConfigurationFile);
             ISessionFactory sessionFactory = configuration.BuildSessionFactory();
             return sessionFactory.OpenSession();
         }
