@@ -229,6 +229,8 @@
     <Compile Include="NhibernateSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\AirportVM.cs" />
+    <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="Repository\Repository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />

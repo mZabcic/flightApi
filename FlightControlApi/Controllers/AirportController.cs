@@ -12,23 +12,30 @@ using System.Collections;
 using NHibernate.Spatial.Type;
 using NetTopologySuite.Geometries;
 using NHibernate.Exceptions;
+using FlightControlApi.Repository;
+using NHibernate.Criterion;
 
 namespace FlightControlApi.Controllers
 {
     public class AirportController : ApiController
     {
 
+        IRepository<Airport> repo;
+        IRepository<AirportVM> repoVM;
+
+        public AirportController()
+        {
+
+            repo = new Repository<Airport>();
+            repoVM = new Repository<AirportVM>();
+        }
+
 
         [HttpGet]
         [Route("airport")]
         public IEnumerable<AirportVM> Get()
         {
-            IEnumerable<AirportVM> airports;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                airports = session.Query<AirportVM>().ToList();
-            }
-
+            IEnumerable<AirportVM> airports = repoVM.FindAll();
             return airports;
         }
 
@@ -36,11 +43,8 @@ namespace FlightControlApi.Controllers
         [Route("airport/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            AirportVM airport;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                airport = session.Get<AirportVM>(id);
-            }
+            AirportVM airport = repoVM.GetById(id);
+            
             if (airport == null)
             {
                 return NotFound();
@@ -53,12 +57,9 @@ namespace FlightControlApi.Controllers
         [Route("airport/country/{id}")]
         public IHttpActionResult GetByCountry(Int64 id)
         {
-            IEnumerable<AirportVM> airports;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                airports = session.Query<AirportVM>().Where(p => p.CountryId == id).ToList();
-            }
-
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<AirportVM>()
+           .Add(Restrictions.Eq("CountryId", id));
+            IEnumerable<AirportVM> airports = repoVM.FindByCriteria(criteria);
             return Ok(airports);
         }
 
@@ -88,11 +89,8 @@ namespace FlightControlApi.Controllers
                 return BadRequest("CountryId is wrong");
             }
 
-
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(airport);
-            }
+            airport = repo.Add(airport);
+            
             return Ok(airport);
         }
 
@@ -100,7 +98,7 @@ namespace FlightControlApi.Controllers
         [Route("airport/{id}")]
         public IHttpActionResult Put(Int64 id, [FromBody]Airport airport)
         {
-            Airport oldAirport;
+            
             airport.Id = id;
             if (!AirportController.CheckCountry(airport.CountryId))
             {
@@ -108,27 +106,12 @@ namespace FlightControlApi.Controllers
             }
 
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldAirport = session.Load<Airport>(id);
-                oldAirport = airport;
-                 session.Update(oldAirport);
-               
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-               
-            }
+            bool check = repo.Update(airport, id);
 
-
-            return Ok(oldAirport);
+            if (check)
+                return Ok();
+            else
+                return NotFound();
         }
 
         [HttpDelete]
@@ -143,26 +126,24 @@ namespace FlightControlApi.Controllers
                 {
                     return Conflict();
                 }
-                Airport airport = session.Get<Airport>(id);
-                if (airport == null)
-                {
-                    return NotFound();
-                }
-                session.Delete(airport);
-
-                session.Flush();
             }
-            return Ok();
+            bool check = repo.Delete(id);
+
+            if (check)
+                return Ok();
+            else
+                return NotFound();
+            
 
         }
 
         private static bool CheckCountry(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Country>().Where(p => p.Id == id).Count();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Country>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Country>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 

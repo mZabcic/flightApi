@@ -9,21 +9,30 @@ using NHibernate;
 using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
+using FlightControlApi.Repository;
 
 namespace FlightControlApi.Controllers
 {
     public class PlaneController : ApiController
     {
 
+      
+        IRepository<Plane> repo;
+
+        public PlaneController()
+        {
+         
+            repo = new Repository<Plane>();
+        }
+
+      
+
         [HttpGet]
         [Route("plane")]
         public IEnumerable<Plane> Get()
         {
             IEnumerable<Plane> planes;
-            using (ISession session = NHibernateSession.OpenSession())  
-            {
-                planes = session.Query<Plane>().ToList();
-            }
+            planes = repo.FindAll();
             return planes;
         }
 
@@ -31,11 +40,8 @@ namespace FlightControlApi.Controllers
         [Route("planes/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            Plane plane;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                plane = session.Get<Plane>(id); 
-            }
+            Plane plane = repo.GetById(id);
+            
             if (plane == null)
             {
                 return NotFound();
@@ -57,10 +63,9 @@ namespace FlightControlApi.Controllers
             }
             plane.Active = 1;
 
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
-            {
-                session.Save(plane);
-            }
+
+            repo.Add(plane);
+            
             PlaneController.CreateSeats(plane);
             return Ok(plane);
         }
@@ -69,9 +74,9 @@ namespace FlightControlApi.Controllers
         [Route("plane/{id}")]
         public IHttpActionResult Put(Int64 id, [FromBody]Plane plane)
         {
-          
 
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+
+            using (ISession session = NHibernateSession.OpenSession())
             {
                 var query = "update Plane set Model = :model, SerialNumber = :serial where Id = :plane";
                 var update = session.CreateQuery(query)
@@ -80,6 +85,7 @@ namespace FlightControlApi.Controllers
                                       .SetParameter("model", plane.Model);
                 update.ExecuteUpdate();
             }
+            
 
 
             return Ok();
@@ -90,7 +96,7 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
             Plane oldPlane;
-            using (ISession session = NHibernateSession.OpenSession())  // Open a session to conect to the database
+            using (ISession session = NHibernateSession.OpenSession())
             {
                 session.Transaction.Begin();
                 oldPlane = session.Load<Plane>(id);
@@ -106,49 +112,40 @@ namespace FlightControlApi.Controllers
                     session.Transaction.Dispose();
                     return NotFound();
                 }
-
             }
+
+            
             return Ok();
 
         }
 
         private static void CreateSeats(Plane plane)
         {
-            using (ISession session = NHibernateSession.OpenSession()) { 
+            IRepository<Seat> seatRepo = new Repository<Seat>();
                Int64 curNum = 1;
             for (Int64 i = 0; i < plane.FirstClassCapacity; i++)
             {
                 Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 3 };
-                    session.Save(seat);
+                seatRepo.Add(seat);
                     curNum++;
             }
             for (Int64 i = 0; i < plane.BusinessCapacity; i++)
             {
                 Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 2 };
-                    session.Save(seat);
-                    curNum++;
+                seatRepo.Add(seat);
+                curNum++;
             }
             for (Int64 i = 0; i < plane.EconomyCapacity; i++)
             {
                 Seat seat = new Seat { Num = curNum, PlaneId = plane.Id, SeatClassId = 1 };
-                    session.Save(seat);
-                    curNum++;
+                seatRepo.Add(seat);
+                curNum++;
             }
-        }
+        
         }
 
 
-        private static void CancelFlight(Plane plane)
-        {
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                var query = "update Flight set Active = false where PlaneId = :plane";
-                var update = session.CreateQuery(query)
-                                    .SetParameter("plane", plane.Id);
-                update.ExecuteUpdate();
-            }
-  
-        }
+   
 
 
     }

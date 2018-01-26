@@ -9,21 +9,30 @@ using NHibernate;
 using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
+using FlightControlApi.Repository;
 
 namespace FlightControlApi.Controllers
 {
     public class PilotController : ApiController
     {
-        
+
+        IRepository<Pilot> repo;
+
+        public PilotController()
+        {
+
+            repo = new Repository<Pilot>();
+        }
+
+
         [HttpGet]
         [Route("pilot")]
         public IEnumerable<Pilot> Get()
         {
             IEnumerable<Pilot> pilots;
-            using (ISession session = NHibernateSession.OpenSession())  
-            {
-                pilots = session.Query<Pilot>().ToList(); 
-            }
+
+            pilots = repo.FindAll();
+            
             return pilots;
         }
 
@@ -31,11 +40,7 @@ namespace FlightControlApi.Controllers
         [Route("pilot/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            Pilot pilot;
-            using (ISession session = NHibernateSession.OpenSession())  
-            {
-                pilot = session.Get<Pilot>(id); 
-            }
+            Pilot pilot = repo.GetById(id);
             if (pilot == null)
             {
                 return NotFound();
@@ -60,11 +65,8 @@ namespace FlightControlApi.Controllers
                 return BadRequest("BirthDay is required");
             }
             pilot.Active = true;
-           
-            using (ISession session = NHibernateSession.OpenSession())  
-            {
-                session.Save(pilot);
-            }
+
+            Pilot newPilot = repo.Add(pilot);
             return Ok(pilot);
         }
 
@@ -72,28 +74,29 @@ namespace FlightControlApi.Controllers
         [Route("pilot/{id}")]
         public IHttpActionResult Put(Int64 id, [FromBody]Pilot pilot)
         {
-            Pilot oldPilot;
-            pilot.Id = id;
           
-
-                using (ISession session = NHibernateSession.OpenSession())  
+            pilot.Id = id;
+            pilot.Active = true;
+            Pilot oldPilot;
+            using (ISession session = NHibernateSession.OpenSession())
             {
                 session.Transaction.Begin();
-                 oldPilot = session.Load<Pilot>(id);
-                
+                oldPilot = session.Load<Pilot>(id);
                 oldPilot = pilot;
-
                 session.Update(oldPilot);
+
                 try
                 {
                     session.Transaction.Commit();
-                } catch (NHibernate.StaleStateException exception)
+                }
+                catch (NHibernate.StaleStateException exception)
                 {
                     session.Transaction.Dispose();
                     return NotFound();
                 }
+
             }
-            
+
 
             return Ok(oldPilot);
         }
@@ -112,6 +115,7 @@ namespace FlightControlApi.Controllers
                 session.Update(pilot);
                 try
                 {
+                    
                     session.Transaction.Commit();
                 }
                 catch (NHibernate.StaleStateException exception)

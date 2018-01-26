@@ -17,7 +17,7 @@ namespace FlightControlApi.Controllers
 {
     public class PassengerController : ApiController
     {
-
+        
 
         [HttpGet]
         [Route("passenger")]

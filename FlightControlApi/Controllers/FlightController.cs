@@ -9,21 +9,31 @@ using NHibernate;
 using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
+using FlightControlApi.Repository;
 
 namespace FlightControlApi.Controllers
 {
     public class FlightController : ApiController
     {
 
+        IRepository<Flight> repo;
+        IRepository<FlightVM> repoVM;
+        IRepository<FlightWithTickets> repoTickets;
+
+        public FlightController()
+        {
+
+            repo = new Repository<Flight>();
+            repoVM = new Repository<FlightVM>();
+            repoTickets = new Repository<FlightWithTickets>();
+        }
+
         [HttpGet]
         [Route("flight")]
         public IEnumerable<FlightVM> Get()
         {
-            IEnumerable<FlightVM> flights;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                flights = session.Query<FlightVM>().ToList();
-            }
+            IEnumerable<FlightVM> flights = repoVM.FindAll();
+            
             return flights;
         }
 
@@ -31,11 +41,8 @@ namespace FlightControlApi.Controllers
         [Route("flight/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            FlightWithTickets flight;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                flight = session.Get<FlightWithTickets>(id);
-            }
+            FlightWithTickets flight = repoTickets.GetById(id);
+            
             if (flight == null)
             {
                 return NotFound();
@@ -55,10 +62,7 @@ namespace FlightControlApi.Controllers
                 return BadRequest(check);
             }
             flight.Price = Decimal.Round(flight.Price, 2);
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(flight);
-            }
+            flight = repo.Add(flight);
             return Ok(flight);
         }
 
@@ -85,10 +89,7 @@ namespace FlightControlApi.Controllers
             {
                 return BadRequest(check);
             }
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(newFlight);
-            }
+            newFlight = repo.Add(newFlight);
             return Ok(newFlight);
         }
 
@@ -336,10 +337,9 @@ namespace FlightControlApi.Controllers
                 route = new Route();
                 route.DestinationId = ArrAirport;
                 route.FromId = DepAirport;
-                using (ISession session = NHibernateSession.OpenSession())
-                {
-                    session.Save(route);
-                }
+                IRepository<Route> routeRepo = new Repository<Route>();
+                routeRepo.Add(route);
+                
                 return route.Id;
             } else
             {

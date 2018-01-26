@@ -12,35 +12,37 @@ using System.Collections;
 using NHibernate.Spatial.Type;
 using NetTopologySuite.Geometries;
 using NHibernate.Exceptions;
+using FlightControlApi.Repository;
+using NHibernate.Criterion;
 
 namespace FlightControlApi.Controllers
 {
     public class StoreController : ApiController
     {
 
+        IRepository<Store> repo;
+        IRepository<StoreVM> repoVM;
+
+        public StoreController()
+        {
+
+            repo = new Repository<Store>();
+            repoVM = new Repository<StoreVM>();
+        }
+
 
         [HttpGet]
         [Route("store")]
         public IEnumerable<StoreVM> Get()
         {
-            IEnumerable<StoreVM> stores;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                stores = session.Query<StoreVM>().ToList();
-            }
-
-            return stores;
+            return repoVM.FindAll();
         }
 
         [HttpGet]
         [Route("store/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            StoreVM store;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                store = session.Get<StoreVM>(id);
-            }
+            StoreVM store = repoVM.GetById(id);
             if (store == null)
             {
                 return NotFound();
@@ -53,11 +55,10 @@ namespace FlightControlApi.Controllers
         [Route("store/country/{id}")]
         public IHttpActionResult GetByCountry(Int64 id)
         {
-            IEnumerable<StoreVM> stores;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                stores = session.Query<StoreVM>().Where(p => p.CountryId == id).ToList();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<StoreVM>()
+             .Add(Restrictions.Eq("CountryId", id));
+
+            IEnumerable<StoreVM> stores = repoVM.FindByCriteria(criteria);
 
             return Ok(stores);
         }
@@ -90,10 +91,7 @@ namespace FlightControlApi.Controllers
 
 
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(store);
-            }
+            store = repo.Add(store);
             return Ok(store);
         }
 
@@ -101,35 +99,18 @@ namespace FlightControlApi.Controllers
         [Route("store/{id}")]
         public IHttpActionResult Put(Int64 id, [FromBody]Store store)
         {
-            Store oldStore;
             store.Id = id;
             if (!StoreController.CheckCountry(store.CountryId))
             {
                 return BadRequest("CountryId is wrong");
-            }
+            } 
 
+            bool check = repo.Update(store, id);
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldStore = session.Load<Store>(id);
-                oldStore = store;
-                session.Update(oldStore);
-
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-
-            }
-
-
-            return Ok(oldStore);
+            if (check)
+                return Ok();
+            else
+                return NotFound();
         }
 
         [HttpDelete]
@@ -137,33 +118,22 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                int count = session.Query<Ticket>().Where(c => c.StoreId == id).Count();
-                if (count > 0)
-                {
-                    return Conflict();
-                } 
-                Store store = session.Get<Store>(id);
-                if (store == null)
-                {
-                    return NotFound();
-                }
-                session.Delete(store);
+            bool check = repo.Delete(id);
 
-                session.Flush();
-            }
-            return Ok();
+            if (check)
+                return Ok();
+            else
+                return NotFound();
 
         }
 
         private static bool CheckCountry(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Country>().Where(p => p.Id == id).Count();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Country>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Country>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 

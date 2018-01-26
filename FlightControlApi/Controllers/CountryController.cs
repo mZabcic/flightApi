@@ -7,24 +7,29 @@ using System.Web.Http;
 using FlightControlApi.Models;
 using NHibernate;
 using NHibernate.Linq;
+using FlightControlApi.Repository;
 
 namespace FlightControlApi.Controllers
 {
     public class CountryController : ApiController
     {
 
-        ISession session;
+        IRepository<Country> repo;
+   
 
-    
+        public CountryController()
+        {
+
+            repo = new Repository<Country>();
+        }
+
+
         [HttpGet]
         [Route("country")]
         public IEnumerable<Country> Get()
         {
-            IEnumerable<Country> countries;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                countries = session.Query<Country>().ToList();
-            }
+            IEnumerable<Country> countries = repo.FindAll();
+            
             return countries;
         }
 
@@ -32,11 +37,8 @@ namespace FlightControlApi.Controllers
         [Route("country/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            Country countries;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                countries = session.Get<Country>(id);
-            }
+            Country countries = repo.GetById(id);
+            
             if (countries == null)
             {
                 return NotFound();

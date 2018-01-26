@@ -7,24 +7,30 @@ using System.Web.Http;
 using FlightControlApi.Models;
 using NHibernate;
 using NHibernate.Linq;
+using FlightControlApi.Repository;
+using NHibernate.Criterion;
 
 namespace FlightControlApi.Controllers
 {
     public class SeatController : ApiController
     {
 
-        ISession session;
+        IRepository<SeatVM> repo;
+        IRepository<SeatClass> classRepo;
+
+        public SeatController()
+        {
+            repo = new Repository<SeatVM>();
+            classRepo = new Repository<SeatClass>();
+        }
 
 
         [HttpGet]
         [Route("seat/class")]
         public IEnumerable<SeatClass> Get()
         {
-            IEnumerable<SeatClass> seatClasses;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                seatClasses = session.Query<SeatClass>().ToList();
-            }
+            IEnumerable<SeatClass> seatClasses = classRepo.FindAll();
+            
             return seatClasses;
         }
 
@@ -32,11 +38,8 @@ namespace FlightControlApi.Controllers
         [Route("seat/class/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            SeatClass seatClass;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                seatClass = session.Get<SeatClass>(id);
-            }
+            SeatClass seatClass = classRepo.GetById(id);
+            
             if (seatClass == null)
             {
                 return NotFound();
@@ -48,11 +51,8 @@ namespace FlightControlApi.Controllers
         [Route("seat")]
         public IEnumerable<SeatVM> GetSeats()
         {
-            IEnumerable<SeatVM> seats;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                seats = session.Query<SeatVM>().ToList();
-            }
+            IEnumerable<SeatVM> seats = repo.FindAll();
+            
             return seats;
         }
 
@@ -60,11 +60,10 @@ namespace FlightControlApi.Controllers
         [Route("seat/plane/{id}")]
         public IHttpActionResult GetByPlane(Int64 id)
         {
-            IEnumerable<SeatVM> seats;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                seats = session.Query<SeatVM>().Where(p => p.PlaneId == id).ToList();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<SeatVM>()
+            .Add(Restrictions.Eq("PlaneId", id));
+            IEnumerable<SeatVM> seats = repo.FindByCriteria(criteria);
+            
            
             return Ok(seats);
         }
@@ -73,11 +72,10 @@ namespace FlightControlApi.Controllers
         [Route("seat/plane/{id}/class/{classId}")]
         public IHttpActionResult GetByPlaneAndClass(Int64 id, Int64 classId)
         {
-            IEnumerable<SeatVM> seats;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                seats = session.Query<SeatVM>().Where(p => p.PlaneId == id && p.SeatClassId == classId).ToList();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<SeatVM>()
+           .Add(Restrictions.Eq("PlaneId", id)).Add(Restrictions.Eq("SeatClassId", classId));
+            IEnumerable<SeatVM> seats = repo.FindByCriteria(criteria);
+            
 
             return Ok(seats);
         }

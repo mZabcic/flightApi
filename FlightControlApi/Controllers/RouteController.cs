@@ -9,33 +9,37 @@ using NHibernate;
 using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
+using FlightControlApi.Repository;
+using NHibernate.Criterion;
 
 namespace FlightControlApi.Controllers
 {
     public class RouteController : ApiController
     {
 
+        IRepository<Route> repo;
+        IRepository<RouteVM> repoVM;
+
+        public RouteController()
+        {
+
+            repo = new Repository<Route>();
+            repoVM = new Repository<RouteVM>();
+        }
+
         [HttpGet]
         [Route("route")]
         public IEnumerable<RouteVM> Get()
         {
-            IEnumerable<RouteVM> routes;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                routes = session.Query<RouteVM>().ToList();
-            }
-            return routes;
+         
+            return repoVM.FindAll();
         }
 
         [HttpGet]
         [Route("route/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            RouteVM route;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                route = session.Get<RouteVM>(id);
-            }
+            RouteVM route = repoVM.GetById(id);
             if (route == null)
             {
                 return NotFound();
@@ -68,10 +72,7 @@ namespace FlightControlApi.Controllers
                 return BadRequest("FromId is wrong");
             }
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(route);
-            }
+            route = repo.Add(route);
             return Ok(route);
         }
 
@@ -136,11 +137,11 @@ namespace FlightControlApi.Controllers
 
         private static bool CheckAirport(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Airport>().Where(p => p.Id == id).Count();
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Airport>()
+             .Add(Restrictions.Eq("Id", id));
+           
+            int count = new Repository<Airport>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 
