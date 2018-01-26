@@ -10,6 +10,7 @@ using NHibernate.Linq;
 using System.Reflection;
 using System.Collections;
 using FlightControlApi.Repository;
+using NHibernate.Criterion;
 
 namespace FlightControlApi.Controllers
 {
@@ -111,7 +112,7 @@ namespace FlightControlApi.Controllers
             
 
 
-            Flight oldFlight;
+            
             newFlight.Id = id;
 
             String check = FlightController.checkFlight(newFlight, id);
@@ -120,27 +121,12 @@ namespace FlightControlApi.Controllers
                 return BadRequest(check);
             }
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldFlight = session.Load<Flight>(id);
+            bool check1 = repo.Update(newFlight, id);
 
-                oldFlight = newFlight;
-
-                session.Update(oldFlight);
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-            }
-
-
-            return Ok(oldFlight);
+            if (check1)
+                return Ok();
+            else
+                return NotFound();
         }
 
 
@@ -157,83 +143,66 @@ namespace FlightControlApi.Controllers
                 return BadRequest(check);
             }
             flight.Price = Decimal.Round(flight.Price, 2);
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldFlight = session.Load<Flight>(id);
+            bool check1 = repo.Update(flight, id);
 
-                oldFlight = flight;
-
-                session.Update(oldFlight);
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-            }
-
-
-            return Ok(oldFlight);
+            if (check1)
+                return Ok();
+            else
+                return NotFound();
         }
 
         [HttpDelete]
         [Route("flight/{id}")]
         public IHttpActionResult Delete(Int64 id)
         {
-            Flight flight;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                flight = session.Load<Flight>(id);
+            Flight flight = repo.GetById(id);
                 flight.Canceled = true;
 
-                session.Update(flight);
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
+                
 
-            }
-            return Ok();
+            
+            bool check1 = repo.Update(flight, id);
+
+            if (check1)
+                return Ok();
+            else
+                return NotFound();
 
         }
 
         private static bool CheckRoute(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Route>().Where(p => p.Id == id).Count();
-            }
+      
+           
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Route>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Route>().FindByCriteria(criteria).Count();
+
             return count > 0;
+            
         }
 
         private static bool CheckPlane(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Plane>().Where(p => p.Id == id && p.Active == 1).Count();
-            }
+
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Plane>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Plane>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 
         private static bool CheckPilot(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Pilot>().Where(p => p.Id == id && p.Active).Count();
-            }
+           
+
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Pilot>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Pilot>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 
@@ -316,22 +285,25 @@ namespace FlightControlApi.Controllers
 
         private static bool CheckAirport(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Airport>().Where(p => p.Id == id).Count();
-            }
+           
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Airport>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Airport>().FindByCriteria(criteria).Count();
+
             return count > 0;
+
         }
 
         private static Int64 CreateOrGetRoute(Int64 DepAirport, Int64 ArrAirport)
         {
-            Route route;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                route = session.Query<Route>().Where(p => p.FromId == DepAirport && p.DestinationId == ArrAirport).FirstOrDefault();
 
-            }
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Route>()
+            .Add(Restrictions.Or(
+        Restrictions.Eq("FromId", DepAirport),
+        Restrictions.Eq("DestinationId", ArrAirport)));
+            Route route = new Repository<Route>().FindByCriteria(criteria).First();
+           
             if (route == null)
             {
                 route = new Route();

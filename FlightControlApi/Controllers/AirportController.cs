@@ -119,14 +119,16 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                int count = session.Query<Route>().Where(c => c.FromId == id || c.DestinationId == id).Count();
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Route>()
+            .Add(Restrictions.Or(
+        Restrictions.Eq("FromId", id),
+        Restrictions.Eq("DestinationId", id)));
+            int count = new Repository<Route>().FindByCriteria(criteria).Count();
                 if (count > 0)
                 {
                     return Conflict();
                 }
-            }
+            
             bool check = repo.Delete(id);
 
             if (check)

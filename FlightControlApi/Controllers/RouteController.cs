@@ -92,27 +92,12 @@ namespace FlightControlApi.Controllers
             }
 
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldRoute = session.Load<Route>(id);
+            bool check = repo.Update(route, id);
 
-                oldRoute = route;
-
-                session.Update(oldRoute);
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-            }
-
-
-            return Ok(oldRoute);
+            if (check)
+                return Ok();
+            else
+                return NotFound();
         }
 
         [HttpDelete]
@@ -120,18 +105,21 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                Route route = session.Get<Route>(id);
-                if (route == null)
+             var criteria = NHibernate.Criterion.DetachedCriteria.For<Flight>()
+            .Add(
+        Restrictions.Eq("RouteId", id));
+            int count = new Repository<Flight>().FindByCriteria(criteria).Count();
+                if (count > 0)
                 {
-                    return NotFound();
+                    return Conflict();
                 }
-                session.Delete(route);
+            
+            bool check = repo.Delete(id);
 
-                session.Flush();
-            }
-            return Ok();
+            if (check)
+                return Ok();
+            else
+                return NotFound();
 
         }
 

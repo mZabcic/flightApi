@@ -77,55 +77,29 @@ namespace FlightControlApi.Controllers
           
             pilot.Id = id;
             pilot.Active = true;
-            Pilot oldPilot;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldPilot = session.Load<Pilot>(id);
-                oldPilot = pilot;
-                session.Update(oldPilot);
 
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
+            bool check = repo.Update(pilot, id);
 
-            }
+            if (check)
+                return Ok();
+            else
+                return NotFound();
 
 
-            return Ok(oldPilot);
         }
 
         [HttpDelete]
         [Route("pilot/{id}")]
         public IHttpActionResult Delete(Int64 id)
         {
-            Pilot pilot;
-            using (ISession session = NHibernateSession.OpenSession())  
-            {
-                session.Transaction.Begin();
-                pilot = session.Load<Pilot>(id);
-                pilot.Active = false;
+            Pilot pilot = repo.GetById(id);
+            pilot.Active = false;
+            bool check = repo.Update(pilot, id);
 
-                session.Update(pilot);
-                try
-                {
-                    
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-
-            }
-            return Ok();
+            if (check)
+                return Ok();
+            else
+                return NotFound();
 
         }
 

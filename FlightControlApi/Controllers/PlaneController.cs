@@ -95,27 +95,15 @@ namespace FlightControlApi.Controllers
         [Route("plane/{id}")]
         public IHttpActionResult Delete(Int64 id)
         {
-            Plane oldPlane;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldPlane = session.Load<Plane>(id);
-                oldPlane.Active = 0;
+            Plane plane = repo.GetById(id);
+            plane.Active = 0;
+            bool check = repo.Update(plane, id);
 
-                session.Update(oldPlane);
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-            }
-
+            if (check)
+                return Ok();
+            else
+                return NotFound();
             
-            return Ok();
 
         }
 

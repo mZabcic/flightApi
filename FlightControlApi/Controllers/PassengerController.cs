@@ -12,22 +12,31 @@ using System.Collections;
 using NHibernate.Spatial.Type;
 using NetTopologySuite.Geometries;
 using NHibernate.Exceptions;
+using NHibernate.Criterion;
+using FlightControlApi.Repository;
 
 namespace FlightControlApi.Controllers
 {
     public class PassengerController : ApiController
     {
-        
+
+
+        IRepository<Passenger> repo;
+        IRepository<PassengerVM> repoVM;
+
+        public PassengerController()
+        {
+
+            repo = new Repository<Passenger>();
+            repoVM = new Repository<PassengerVM>();
+        }
+
 
         [HttpGet]
         [Route("passenger")]
         public IEnumerable<PassengerVM> Get()
         {
-            IEnumerable<PassengerVM> passengers;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                passengers = session.Query<PassengerVM>().ToList();
-            }
+            IEnumerable<PassengerVM> passengers = repoVM.FindAll();
 
             return passengers;
         }
@@ -36,11 +45,7 @@ namespace FlightControlApi.Controllers
         [Route("passenger/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            PassengerVM passenger;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                passenger = session.Get<PassengerVM>(id);
-            }
+            PassengerVM passenger = repoVM.GetById(id);
             if (passenger == null)
             {
                 return NotFound();
@@ -87,10 +92,7 @@ namespace FlightControlApi.Controllers
             }
 
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Save(passenger);
-            }
+            passenger = repo.Add(passenger);
             return Ok(passenger);
         }
 
@@ -102,7 +104,7 @@ namespace FlightControlApi.Controllers
             {
                 return BadRequest("User with this email already exists");
             }
-            Passenger oldPassenger;
+           
             passenger.Id = id;
             if (!PassengerController.CheckCountry(passenger.CountryId))
             {
@@ -110,27 +112,12 @@ namespace FlightControlApi.Controllers
             }
 
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                session.Transaction.Begin();
-                oldPassenger = session.Load<Passenger>(id);
-                oldPassenger = passenger;
-                session.Update(oldPassenger);
+            bool check = repo.Update(passenger, id);
 
-                try
-                {
-                    session.Transaction.Commit();
-                }
-                catch (NHibernate.StaleStateException exception)
-                {
-                    session.Transaction.Dispose();
-                    return NotFound();
-                }
-
-            }
-
-
-            return Ok(oldPassenger);
+            if (check)
+                return Ok();
+            else
+                return NotFound();
         }
 
         [HttpDelete]
@@ -138,43 +125,46 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
 
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                  int count = session.Query<Ticket>().Where(c => c.PassengerId == id).Count();
-                   if (count > 0)
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Ticket>()
+              .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Ticket>().FindByCriteria(criteria).Count();
+
+            if (count > 0)
                    {
                        return Conflict();
-                   } 
-                Passenger passenger = session.Get<Passenger>(id);
-                if (passenger == null)
-                {
-                    return NotFound();
-                }
-                session.Delete(passenger);
+                   }
 
-                session.Flush();
-            }
-            return Ok();
+
+            bool check = repo.Delete(id);
+
+            if (check)
+                return Ok();
+            else
+                return NotFound();
 
         }
 
         private static bool CheckCountry(Int64 id)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Country>().Where(p => p.Id == id).Count();
-            }
+           
+
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Country>()
+             .Add(Restrictions.Eq("Id", id));
+
+            int count = new Repository<Country>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 
         private static bool UserExists(String email)
         {
-            int count;
-            using (ISession session = NHibernateSession.OpenSession())
-            {
-                count = session.Query<Passenger>().Where(p => p.Email.Equals(email)).Count();
-            }
+            
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Passenger>()
+             .Add(Restrictions.Eq("Email", email));
+
+            int count = new Repository<Passenger>().FindByCriteria(criteria).Count();
+
             return count > 0;
         }
 
