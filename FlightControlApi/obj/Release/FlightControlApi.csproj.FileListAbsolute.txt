@@ -42,3 +42,12 @@ C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\NetTopologySuite.dl
 C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\NHibernate.Spatial.dll
 C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\NHibernate.Spatial.MsSql2008.dll
 C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\PowerCollections.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Castle.Core.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Moq.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\System.Threading.Tasks.Extensions.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\System.ValueTuple.dll
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Castle.Core.xml
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Moq.pdb
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\Moq.xml
+C:\Users\mislavz\source\repos\FlightApi\FlightControlApi\bin\System.Threading.Tasks.Extensions.xml

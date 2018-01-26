@@ -12,21 +12,21 @@ namespace FlightControlApi.Repository
 {
     public class Repository<T> : IRepository<T>
     {
-        
-        protected ISession Session
-        {
-            get { return NHibernateSession.OpenSession(); }
-        }
-        
 
-        public T Add(T entity)
+        public ISession Session { get; set; }
+
+        public Repository() {
+                  Session = NHibernateSession.OpenSession();
+            }
+
+        public virtual T Add(T entity)
         {
             Session.Save(entity);
             Session.Flush();
             return entity;
         }
 
-         public bool Delete(Int64 id)
+        public virtual bool Delete(Int64 id)
         {
 
             using (ISession session = NHibernateSession.OpenSession())
@@ -44,7 +44,7 @@ namespace FlightControlApi.Repository
             return true;
         }
 
-        public bool Update(T entity, Int64 id)
+        public virtual bool Update(T entity, Int64 id)
         {
 
             using (ISession session = NHibernateSession.OpenSession())
@@ -72,18 +72,18 @@ namespace FlightControlApi.Repository
 
         }
 
-        public T GetById(Int64 id)
+        public virtual T GetById(Int64 id)
         {
             return Session.Get<T>(id); ;
         }
 
-        public IEnumerable<T> FindAll()
+        public virtual IEnumerable<T> FindAll()
         {
 
             return Session.Query<T>().ToList();
         }
 
-        public IEnumerable<T> FindByCriteria(NHibernate.Criterion.DetachedCriteria criteria)
+        public virtual IEnumerable<T> FindByCriteria(NHibernate.Criterion.DetachedCriteria criteria)
         {
             return criteria.GetExecutableCriteria(Session).List<T>();
         }

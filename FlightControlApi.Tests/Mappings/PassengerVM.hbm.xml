@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="FlightControlApi" namespace="FlightControlApi.Models">
+  <class name="PassengerVM" table="Passenger" dynamic-update="true" >
+    <cache usage="read-write"/>
+    <id name="Id" column="Id" type="long">
+      <generator class="native" />
+    </id>
+
+    <property name="Name"  />
+    <property name="Email" />
+    <property name="Identifier" />
+    <property name="CountryId" />
+    <many-to-one name="Country" lazy="false"  class="Country" column="CountryId" cascade="save-update"/>
+
+
+  </class>
+</hibernate-mapping>

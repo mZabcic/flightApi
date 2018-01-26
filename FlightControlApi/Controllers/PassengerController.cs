@@ -31,6 +31,12 @@ namespace FlightControlApi.Controllers
             repoVM = new Repository<PassengerVM>();
         }
 
+        public PassengerController(IRepository<Passenger> repo, IRepository<PassengerVM> repoVM )
+        {
+
+            this.repo = repo;
+            this.repoVM = repoVM;
+        }
 
         [HttpGet]
         [Route("passenger")]
