@@ -62,6 +62,7 @@ namespace FlightControlApi
                 return sessionFactory.OpenSession();
             } catch (NullReferenceException e)
             {
+                
                 var configuration = new Configuration();
                 var configurationPath = Path.Combine(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()).ToString(), @"Models\hibernateForTesting.cfg.xml");
                 configuration.Configure(configurationPath);
@@ -104,9 +105,9 @@ namespace FlightControlApi
                 configuration.AddFile(ticketConfigurationFile);
                 configuration.AddFile(ticketVMConfigurationFile);
                 configuration.AddFile(ticketCreatorConfigurationFile);
-                configuration.AddFile(flightWithTicketsConfigurationFile);
+                configuration.AddFile(flightWithTicketsConfigurationFile); 
                 ISessionFactory sessionFactory = configuration.BuildSessionFactory();
-                return sessionFactory.OpenSession();
+                return sessionFactory.OpenSession(); 
             }
 
         }

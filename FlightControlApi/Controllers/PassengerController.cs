@@ -23,19 +23,25 @@ namespace FlightControlApi.Controllers
 
         IRepository<Passenger> repo;
         IRepository<PassengerVM> repoVM;
+        IRepository<Country> repoCountry;
+        IRepository<Ticket> repoTicket;
 
         public PassengerController()
         {
 
             repo = new Repository<Passenger>();
             repoVM = new Repository<PassengerVM>();
+            repoCountry = new Repository<Country>();
+            repoTicket = new Repository<Ticket>();
         }
 
-        public PassengerController(IRepository<Passenger> repo, IRepository<PassengerVM> repoVM )
+        public PassengerController(IRepository<Passenger> repo, IRepository<PassengerVM> repoVM, IRepository<Country> repoCountry, IRepository<Ticket> repoTicket)
         {
 
             this.repo = repo;
             this.repoVM = repoVM;
+            this.repoCountry = repoCountry;
+            this.repoTicket = repoTicket;
         }
 
         [HttpGet]
@@ -84,18 +90,18 @@ namespace FlightControlApi.Controllers
             {
                 return BadRequest("Identifier is required");
             }
-            if (passenger.CountryId == 0)
-            {
-                return BadRequest("CountryId is required");
-            }
-            if (!PassengerController.CheckCountry(passenger.CountryId))
-            {
-                return BadRequest("CountryId is wrong");
-            }
-            if (PassengerController.UserExists(passenger.Email))
+               if (passenger.CountryId == 0)
+               {
+                   return BadRequest("CountryId is required");
+               }
+                   if (!this.CheckCountry(passenger.CountryId))
+                   {
+                       return BadRequest("CountryId is wrong");
+                   }
+            if (this.UserExists(passenger.Email))
             {
                 return BadRequest("User with this email already exists");
-            }
+            } 
 
 
             passenger = repo.Add(passenger);
@@ -106,13 +112,13 @@ namespace FlightControlApi.Controllers
         [Route("passenger/{id}")]
         public IHttpActionResult Put(Int64 id, [FromBody]Passenger passenger)
         {
-            if (PassengerController.UserExists(passenger.Email))
+            if (this.UserExists(passenger.Email))
             {
                 return BadRequest("User with this email already exists");
             }
            
             passenger.Id = id;
-            if (!PassengerController.CheckCountry(passenger.CountryId))
+            if (!this.CheckCountry(passenger.CountryId))
             {
                 return BadRequest("CountryId is wrong");
             }
@@ -131,10 +137,9 @@ namespace FlightControlApi.Controllers
         public IHttpActionResult Delete(Int64 id)
         {
 
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<Ticket>()
-              .Add(Restrictions.Eq("Id", id));
+          
 
-            int count = new Repository<Ticket>().FindByCriteria(criteria).Count();
+            int count = repoTicket.FindBy("PassengerId", id).Count();
 
             if (count > 0)
                    {
@@ -151,25 +156,22 @@ namespace FlightControlApi.Controllers
 
         }
 
-        private static bool CheckCountry(Int64 id)
+        private  bool CheckCountry(Int64 id)
         {
            
 
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<Country>()
-             .Add(Restrictions.Eq("Id", id));
 
-            int count = new Repository<Country>().FindByCriteria(criteria).Count();
+            Country count = repoCountry.GetById(id);
 
-            return count > 0;
+            return count != null;
         }
 
-        private static bool UserExists(String email)
+        private  bool UserExists(String email)
         {
             
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<Passenger>()
-             .Add(Restrictions.Eq("Email", email));
+         
 
-            int count = new Repository<Passenger>().FindByCriteria(criteria).Count();
+            int count = repo.FindBy("Email", email).Count();
 
             return count > 0;
         }

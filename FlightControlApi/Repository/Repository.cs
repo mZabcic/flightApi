@@ -88,5 +88,19 @@ namespace FlightControlApi.Repository
             return criteria.GetExecutableCriteria(Session).List<T>();
         }
 
+        public virtual IEnumerable<T> FindBy(String column, String value)
+        {
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<T>()
+            .Add(Restrictions.Eq(column, value));
+            return criteria.GetExecutableCriteria(Session).List<T>();
+        }
+
+        public virtual IEnumerable<T> FindBy(String column, Int64 value)
+        {
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<T>()
+            .Add(Restrictions.Eq(column, value));
+            return criteria.GetExecutableCriteria(Session).List<T>();
+        }
+
     }
 }

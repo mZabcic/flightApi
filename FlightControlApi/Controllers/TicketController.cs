@@ -200,19 +200,19 @@ namespace FlightControlApi.Controllers
 
         private static string CheckTicket(TicketCreator ticket)
         {
-            if (ticket.FlightId == 0)
+            if (ticket.CheckFlightId())
             {
                 return "FlightId is required";
             }
-            if (ticket.SeatClassId > 4 || ticket.SeatClassId < 1)
+            if (ticket.CheckSeatClass())
             {
-                return "SeatId is required";
+                return "SeatClass is required";
             }
-            if (ticket.StoreId == 0)
+            if (ticket.CheckStoreId())
             {
                 return "StoreId is required";
             }
-            if (ticket.PassengerId == 0)
+            if (ticket.CheckPassengerId())
             {
                 return "PassengerId is required";
             }

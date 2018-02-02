@@ -15,5 +15,30 @@ namespace FlightControlApi.Models
         public virtual Int64 StoreId { get; set; }
         public virtual Int64 PassengerId { get; set; }
 
+        public bool CheckFlightId()
+        {
+            if (this.FlightId == 0)
+                return true;
+            else
+                return false;
+        }
+
+        public bool CheckPassengerId()
+        {
+            if (this.PassengerId == 0)
+                return true;
+            else
+                return false;
+        }
+
+        public bool CheckStoreId()
+        {
+            if (this.StoreId == 0)
+                return true;
+            else
+                return false;
+        }
+
+
     }
 }

@@ -15,7 +15,8 @@ namespace FlightControlApi.Repository
         T GetById(Int64 id);
         IEnumerable<T> FindAll();
         IEnumerable<T> FindByCriteria(NHibernate.Criterion.DetachedCriteria criteria);
+        IEnumerable<T> FindBy(String column, String value);
+        IEnumerable<T> FindBy(String column, Int64 value);
 
-
-}
+    }
 }
