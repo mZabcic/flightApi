@@ -22,29 +22,27 @@ namespace FlightControlApi.Controllers
 
 
         IRepository<Ticket> repo;
-        IRepository<TicketVM> repoVM;
 
         public TicketController()
         {
 
             repo = new Repository<Ticket>();
-            repoVM = new Repository<TicketVM>();
         }
 
         [HttpGet]
         [Route("ticket")]
-        public IEnumerable<TicketVM> Get()
+        public IEnumerable<Ticket> Get()
         {
  
 
-            return repoVM.FindAll();
+            return repo.FindAll();
         }
 
         [HttpGet]
         [Route("ticket/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            TicketVM ticket = repoVM.GetById(id);
+            Ticket ticket = repo.GetById(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -57,9 +55,9 @@ namespace FlightControlApi.Controllers
         [Route("ticket/flight/{id}")]
         public IHttpActionResult GetByFlight(Int64 id)
         {
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<TicketVM>()
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Ticket>()
              .Add(Restrictions.Eq("FlightId", id));
-            IEnumerable<TicketVM> tickets = repoVM.FindByCriteria(criteria);
+            IEnumerable<Ticket> tickets = repo.FindByCriteria(criteria);
 
             return Ok(tickets);
         }
@@ -143,13 +141,13 @@ namespace FlightControlApi.Controllers
 
         private static Int64 CheckAvailable(Int64 flightId, Int64 seatClassId)
         {
-            FlightVM flight;
-            IEnumerable<TicketVM> tickets;
+            Flight flight;
+            IEnumerable<Ticket> tickets;
             IEnumerable<Seat> seats;
             using (ISession session = NHibernateSession.OpenSession())
             {
-                flight = session.Get<FlightVM>(flightId);
-                tickets = session.Query<TicketVM>().Where(p => p.FlightId == flightId && p.Seat.SeatClassId == seatClassId && p.Revoked == false).OrderBy(p => p.Seat.Num).ToList();
+                flight = session.Get<Flight>(flightId);
+                tickets = session.Query<Ticket>().Where(p => p.FlightId == flightId && p.Seat.SeatClassId == seatClassId && p.Revoked == false).OrderBy(p => p.Seat.Num).ToList();
                 seats = session.Query<Seat>().Where(p => p.PlaneId == flight.PlaneId && p.SeatClassId == seatClassId).ToList();
             }
             Int64 Seats = 0;

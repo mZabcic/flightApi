@@ -14,8 +14,12 @@ namespace FlightControlApi.Models
         public virtual Int64 FlightId { get; set; }
         public virtual Int64 StoreId { get; set; }
         public virtual Int64 PassengerId { get; set; }
+        public virtual Flight Flight { get; set; }
+        public virtual Store Store { get; set; }
+        public virtual Seat Seat { get; set; }
+        public virtual Passenger Passenger { get; set; }
 
-        public bool CheckFlightId()
+        public virtual bool CheckFlightId()
         {
             if (this.FlightId == 0)
                 return true;
@@ -23,7 +27,7 @@ namespace FlightControlApi.Models
                 return false;
         }
 
-        public bool CheckPassengerId()
+        public virtual bool CheckPassengerId()
         {
             if (this.PassengerId == 0)
                 return true;
@@ -31,7 +35,7 @@ namespace FlightControlApi.Models
                 return false;
         }
 
-        public bool CheckStoreId()
+        public virtual bool CheckStoreId()
         {
             if (this.StoreId == 0)
                 return true;

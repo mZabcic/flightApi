@@ -10,7 +10,7 @@
     <property name="Email" />
     <property name="Identifier" />
     <property name="CountryId" />
-
+    <many-to-one name="Country" lazy="false"  class="Country" column="CountryId" insert="false" update="false"/>
 
   </class>
 </hibernate-mapping>

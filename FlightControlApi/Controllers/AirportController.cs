@@ -21,21 +21,20 @@ namespace FlightControlApi.Controllers
     {
 
         IRepository<Airport> repo;
-        IRepository<AirportVM> repoVM;
+        
 
         public AirportController()
         {
 
             repo = new Repository<Airport>();
-            repoVM = new Repository<AirportVM>();
         }
 
 
         [HttpGet]
         [Route("airport")]
-        public IEnumerable<AirportVM> Get()
+        public IEnumerable<Airport> Get()
         {
-            IEnumerable<AirportVM> airports = repoVM.FindAll();
+            IEnumerable<Airport> airports = repo.FindAll();
             return airports;
         }
 
@@ -43,7 +42,7 @@ namespace FlightControlApi.Controllers
         [Route("airport/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            AirportVM airport = repoVM.GetById(id);
+            Airport airport = repo.GetById(id);
             
             if (airport == null)
             {
@@ -57,9 +56,9 @@ namespace FlightControlApi.Controllers
         [Route("airport/country/{id}")]
         public IHttpActionResult GetByCountry(Int64 id)
         {
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<AirportVM>()
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Airport>()
            .Add(Restrictions.Eq("CountryId", id));
-            IEnumerable<AirportVM> airports = repoVM.FindByCriteria(criteria);
+            IEnumerable<Airport> airports = repo.FindByCriteria(criteria);
             return Ok(airports);
         }
 
@@ -67,7 +66,6 @@ namespace FlightControlApi.Controllers
         [Route("airport")]
         public IHttpActionResult Post([FromBody]Airport airport)
         {
-            
             if (airport.Name == null)
             {
                 return BadRequest("Name is required");

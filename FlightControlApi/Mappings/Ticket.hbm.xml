@@ -12,6 +12,10 @@
     <property name="StoreId" />
     <property name="PassengerId" />
     <property name="Revoked" />
+    <many-to-one name="Flight" lazy="false"  class="Flight" column="FlightId" insert="false" update="false"/>
+    <many-to-one name="Store" lazy="false"  class="Store" column="StoreId" insert="false" update="false"/>
+    <many-to-one name="Seat" lazy="false"  class="Seat" column="SeatId" insert="false" update="false"/>
+    <many-to-one name="Passenger" lazy="false"  class="Passenger" column="PassengerId" insert="false" update="false"/>
 
   </class>
 </hibernate-mapping>

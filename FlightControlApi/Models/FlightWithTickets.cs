@@ -16,9 +16,9 @@ namespace FlightControlApi.Models
         public virtual DateTime ArrTime { get; set; }
         public virtual bool Canceled { get; set; }
         public virtual Decimal Price { get; set; }
-        public virtual RouteVM Route { get; set; }
+        public virtual Route Route { get; set; }
         public virtual Plane Plane { get; set; }
         public virtual Pilot Pilot { get; set; }
-        public virtual ISet<TicketVM> Tickets { get; set; }
+        public virtual ISet<Ticket> Tickets { get; set; }
     }
 }

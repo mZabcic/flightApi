@@ -12,5 +12,6 @@ namespace FlightControlApi.Models
         public virtual string Address { get; set; }
         public virtual string ZipCode { get; set; }
         public virtual Int64 CountryId { get; set; }
+        public virtual Country Country { get; set; }
     }
 }

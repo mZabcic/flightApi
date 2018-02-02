@@ -15,12 +15,12 @@ namespace FlightControlApi.Controllers
     public class SeatController : ApiController
     {
 
-        IRepository<SeatVM> repo;
+        IRepository<Seat> repo;
         IRepository<SeatClass> classRepo;
 
         public SeatController()
         {
-            repo = new Repository<SeatVM>();
+            repo = new Repository<Seat>();
             classRepo = new Repository<SeatClass>();
         }
 
@@ -49,9 +49,9 @@ namespace FlightControlApi.Controllers
 
         [HttpGet]
         [Route("seat")]
-        public IEnumerable<SeatVM> GetSeats()
+        public IEnumerable<Seat> GetSeats()
         {
-            IEnumerable<SeatVM> seats = repo.FindAll();
+            IEnumerable<Seat> seats = repo.FindAll();
             
             return seats;
         }
@@ -60,9 +60,9 @@ namespace FlightControlApi.Controllers
         [Route("seat/plane/{id}")]
         public IHttpActionResult GetByPlane(Int64 id)
         {
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<SeatVM>()
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Seat>()
             .Add(Restrictions.Eq("PlaneId", id));
-            IEnumerable<SeatVM> seats = repo.FindByCriteria(criteria);
+            IEnumerable<Seat> seats = repo.FindByCriteria(criteria);
             
            
             return Ok(seats);
@@ -72,9 +72,9 @@ namespace FlightControlApi.Controllers
         [Route("seat/plane/{id}/class/{classId}")]
         public IHttpActionResult GetByPlaneAndClass(Int64 id, Int64 classId)
         {
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<SeatVM>()
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Seat>()
            .Add(Restrictions.Eq("PlaneId", id)).Add(Restrictions.Eq("SeatClassId", classId));
-            IEnumerable<SeatVM> seats = repo.FindByCriteria(criteria);
+            IEnumerable<Seat> seats = repo.FindByCriteria(criteria);
             
 
             return Ok(seats);

@@ -21,28 +21,26 @@ namespace FlightControlApi.Controllers
     {
 
         IRepository<Store> repo;
-        IRepository<StoreVM> repoVM;
 
         public StoreController()
         {
 
             repo = new Repository<Store>();
-            repoVM = new Repository<StoreVM>();
         }
 
 
         [HttpGet]
         [Route("store")]
-        public IEnumerable<StoreVM> Get()
+        public IEnumerable<Store> Get()
         {
-            return repoVM.FindAll();
+            return repo.FindAll();
         }
 
         [HttpGet]
         [Route("store/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            StoreVM store = repoVM.GetById(id);
+            Store store = repo.GetById(id);
             if (store == null)
             {
                 return NotFound();
@@ -55,10 +53,10 @@ namespace FlightControlApi.Controllers
         [Route("store/country/{id}")]
         public IHttpActionResult GetByCountry(Int64 id)
         {
-            var criteria = NHibernate.Criterion.DetachedCriteria.For<StoreVM>()
+            var criteria = NHibernate.Criterion.DetachedCriteria.For<Store>()
              .Add(Restrictions.Eq("CountryId", id));
 
-            IEnumerable<StoreVM> stores = repoVM.FindByCriteria(criteria);
+            IEnumerable<Store> stores = repo.FindByCriteria(criteria);
 
             return Ok(stores);
         }

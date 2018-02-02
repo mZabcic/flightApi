@@ -18,28 +18,26 @@ namespace FlightControlApi.Controllers
     {
 
         IRepository<Route> repo;
-        IRepository<RouteVM> repoVM;
 
         public RouteController()
         {
 
             repo = new Repository<Route>();
-            repoVM = new Repository<RouteVM>();
         }
 
         [HttpGet]
         [Route("route")]
-        public IEnumerable<RouteVM> Get()
+        public IEnumerable<Route> Get()
         {
          
-            return repoVM.FindAll();
+            return repo.FindAll();
         }
 
         [HttpGet]
         [Route("route/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            RouteVM route = repoVM.GetById(id);
+            Route route = repo.GetById(id);
             if (route == null)
             {
                 return NotFound();

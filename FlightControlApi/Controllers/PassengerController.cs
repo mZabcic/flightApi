@@ -22,7 +22,6 @@ namespace FlightControlApi.Controllers
 
 
         IRepository<Passenger> repo;
-        IRepository<PassengerVM> repoVM;
         IRepository<Country> repoCountry;
         IRepository<Ticket> repoTicket;
 
@@ -30,25 +29,23 @@ namespace FlightControlApi.Controllers
         {
 
             repo = new Repository<Passenger>();
-            repoVM = new Repository<PassengerVM>();
             repoCountry = new Repository<Country>();
             repoTicket = new Repository<Ticket>();
         }
 
-        public PassengerController(IRepository<Passenger> repo, IRepository<PassengerVM> repoVM, IRepository<Country> repoCountry, IRepository<Ticket> repoTicket)
+        public PassengerController(IRepository<Passenger> repo, IRepository<Country> repoCountry, IRepository<Ticket> repoTicket)
         {
 
             this.repo = repo;
-            this.repoVM = repoVM;
             this.repoCountry = repoCountry;
             this.repoTicket = repoTicket;
         }
 
         [HttpGet]
         [Route("passenger")]
-        public IEnumerable<PassengerVM> Get()
+        public IEnumerable<Passenger> Get()
         {
-            IEnumerable<PassengerVM> passengers = repoVM.FindAll();
+            IEnumerable<Passenger> passengers = repo.FindAll();
 
             return passengers;
         }
@@ -57,7 +54,7 @@ namespace FlightControlApi.Controllers
         [Route("passenger/{id}")]
         public IHttpActionResult Get(Int64 id)
         {
-            PassengerVM passenger = repoVM.GetById(id);
+            Passenger passenger = repo.GetById(id);
             if (passenger == null)
             {
                 return NotFound();

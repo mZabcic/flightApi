@@ -13,7 +13,7 @@
     <property name="numcode" />
     <set name="airports" lazy="false" inverse="true"  cascade="save-update">
       <key column="CountryId"/>
-      <one-to-many class="Airport"/>
+      <one-to-many class="Airport" />
     </set>
     
   </class>

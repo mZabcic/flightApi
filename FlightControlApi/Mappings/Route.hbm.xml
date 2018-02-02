@@ -8,7 +8,8 @@
 
     <property name="FromId"  />
     <property name="DestinationId" />
-  
 
+    <many-to-one name="From" lazy="false"  class="Airport" column="FromId" insert="false" update="false" />
+    <many-to-one name="Destination" lazy="false"  class="Airport" column="DestinationId" insert="false" update="false" />
   </class>
 </hibernate-mapping>

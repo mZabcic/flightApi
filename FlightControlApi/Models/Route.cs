@@ -10,5 +10,7 @@ namespace FlightControlApi.Models
         public virtual Int64 Id { get; set; }
         public virtual Int64 FromId { get; set; }
         public virtual Int64 DestinationId { get; set; }
+        public virtual Airport From { get; set; }
+        public virtual Airport Destination { get; set; }
     }
 }

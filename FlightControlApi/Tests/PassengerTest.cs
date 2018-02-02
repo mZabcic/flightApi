@@ -20,7 +20,6 @@ namespace FlightControlApi.Tests
     {
 
         private IRepository<Passenger> repo;
-        private IRepository<PassengerVM> repoVM;
         private IRepository<Ticket> repoTicket;
         private IRepository<Country> repoCountry;
 
@@ -43,16 +42,7 @@ namespace FlightControlApi.Tests
 
         };
 
-            IList<PassengerVM> passengersVM = new List<PassengerVM>
-
-                {
-
-                     new PassengerVM { Id = 1, Email = "mocking@mocking.com", CountryId = 5, Identifier = "01923", Name = "Đuro", Country = null },
-                   new PassengerVM { Id = 2, Email = "mocking1@mocking.com", CountryId = 7, Identifier = "545", Name = "Pero" , Country = null},
-                   new PassengerVM  { Id = 3, Email = "mocking2@mocking.com", CountryId = 5, Identifier = "011254923", Name = "Štef", Country = null }
-
-        };
-
+           
 
             IList<Country> country = new List<Country>
 
@@ -79,7 +69,6 @@ namespace FlightControlApi.Tests
 
 
             Mock<IRepository<Passenger>> mockRepository = new Mock<IRepository<Passenger>>();
-            Mock<IRepository<PassengerVM>> mockRepositoryVM = new Mock<IRepository<PassengerVM>>();
             Mock<IRepository<Ticket>> mockRepositoryTicket= new Mock<IRepository<Ticket>>();
             Mock<IRepository<Country>> mockRepositoryCountry = new Mock<IRepository<Country>>();
 
@@ -87,7 +76,7 @@ namespace FlightControlApi.Tests
 
             mockRepository.Setup(mr => mr.FindAll()).Returns(passengers);
 
-            mockRepositoryVM.Setup(mr => mr.FindAll()).Returns(passengersVM);
+          
 
             mockRepositoryTicket.Setup(mr => mr.FindAll()).Returns(ticket);
 
@@ -95,8 +84,7 @@ namespace FlightControlApi.Tests
 
 
             mockRepository.Setup(mr => mr.GetById(It.IsAny<Int64>())).Returns((Int64 i) => passengers.Where(x => x.Id == i).SingleOrDefault());
-
-            mockRepositoryVM.Setup(mr => mr.GetById(It.IsAny<Int64>())).Returns((Int64 i) => passengersVM.Where(x => x.Id == i).SingleOrDefault());
+            
 
             mockRepositoryTicket.Setup(mr => mr.GetById(It.IsAny<Int64>())).Returns((Int64 i) => ticket.Where(x => x.Id == i).SingleOrDefault());
 
@@ -120,19 +108,7 @@ namespace FlightControlApi.Tests
 
                 });
 
-            mockRepositoryVM.Setup(mr => mr.Add(It.IsAny<PassengerVM>())).Returns(
-
-             (PassengerVM target) =>
-
-             {
-
-                 target.Id = passengersVM.Count() + 1;
-
-                 passengersVM.Add(target);
-
-                 return target;
-
-             });
+           
 
 
             mockRepository.Setup(mr => mr.Delete(It.IsAny<Int64>())).Returns(
@@ -148,18 +124,7 @@ namespace FlightControlApi.Tests
 
               });
 
-            mockRepositoryVM.Setup(mr => mr.Delete(It.IsAny<Int64>())).Returns(
-
-            (Int64 id) =>
-
-            {
-
-                PassengerVM i = passengersVM.Where(p => p.Id == id).FirstOrDefault();
-                passengersVM.Remove(i);
-
-                return true;
-
-            });
+          
 
 
 
@@ -202,44 +167,15 @@ namespace FlightControlApi.Tests
              });
 
 
-      mockRepositoryVM.Setup(mr => mr.Update(It.IsAny<PassengerVM>(), It.IsAny<Int64>())).Returns(
+      
 
-       (PassengerVM target, Int64 id) =>
-
-       {
-           PassengerVM original = passengersVM.Where(q => q.Id == id).FirstOrDefault();
-           if (original == null)
-
-           {
-
-               return false;
-
-           }
-
-           else
-           {
-               original.Name = target.Name;
-
-               original.Identifier = target.Identifier;
-
-               original.Email = target.Email;
-
-               original.CountryId = target.CountryId;
-
-               original.Id = target.Id;
-
-
-               return true;
-           }
-
-       });
+       
 
 
 
 
 
             this.repo = mockRepository.Object;
-            this.repoVM = mockRepositoryVM.Object;
             this.repoCountry = mockRepositoryCountry.Object;
             this.repoTicket = mockRepositoryTicket.Object;
 
@@ -296,9 +232,9 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerGet()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             IHttpActionResult actionResult = pc.Get(2);
-            var contentResult = actionResult as OkNegotiatedContentResult<PassengerVM>;
+            var contentResult = actionResult as OkNegotiatedContentResult<Passenger>;
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Id);
@@ -308,8 +244,8 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerGetAll()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
-            IEnumerable<PassengerVM> actionResult = pc.Get();
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
+            IEnumerable<Passenger> actionResult = pc.Get();
             Assert.IsNotNull(actionResult);
             Assert.AreEqual(3, actionResult.Count());
         }
@@ -318,7 +254,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerPost()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             IHttpActionResult actionResult = pc.Post(new Passenger { Email = "mocking123@mocking.com", CountryId = 1, Identifier = "01923", Name = "Đuro" });
             Assert.IsTrue(repo.FindAll().Count() == 4);
             var contentResult = actionResult as OkNegotiatedContentResult<Passenger>; ;
@@ -329,7 +265,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerDelete()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             IHttpActionResult actionResult = pc.Delete(3);
             Assert.IsTrue(repo.FindAll().Count() == 2);
             var contentResult = actionResult as OkNegotiatedContentResult<Passenger>; ;
@@ -341,7 +277,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerUpdate()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             Assert.IsTrue(repo.GetById(1).Name.Equals("Đuro"));
             Passenger newPassenger = new Passenger { Email = "mocking1234@mocking.com", CountryId = 2, Identifier = "01923", Name = "Zdenko" };
             IHttpActionResult actionResult = pc.Put(1, newPassenger);
@@ -353,7 +289,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerPostValidationsEmailUnique()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             //Email vec postoji
             IHttpActionResult actionResult = pc.Post(new Passenger { Email = "mocking@mocking.com", CountryId = 1, Identifier = "01923", Name = "Đuro" });
             Assert.IsTrue(repo.FindAll().Count() == 3);
@@ -366,7 +302,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerPostValidationsEmailFormat()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             //Email vec postoji
             IHttpActionResult actionResult = pc.Post(new Passenger { Email = "mockin", CountryId = 1, Identifier = "01923", Name = "Đuro" });
             Assert.IsTrue(repo.FindAll().Count() == 3);
@@ -380,7 +316,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerPostValidationsCountry()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             //Email vec postoji
             IHttpActionResult actionResult = pc.Post(new Passenger { Email = "mocking123@mocking.com", CountryId = 5, Identifier = "01923", Name = "Đuro" });
             Assert.IsTrue(repo.FindAll().Count() == 3);
@@ -393,7 +329,7 @@ namespace FlightControlApi.Tests
         [TestMethod]
         public void PassengerControllerDeleteTestValidation()
         {
-            PassengerController pc = new PassengerController(repo, repoVM, repoCountry, repoTicket);
+            PassengerController pc = new PassengerController(repo, repoCountry, repoTicket);
             IHttpActionResult actionResult = pc.Delete(1);
             Assert.IsTrue(repo.FindAll().Count() == 3);
             var contentResult = actionResult as OkNegotiatedContentResult<Passenger>; ;

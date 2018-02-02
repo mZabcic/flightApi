@@ -18,22 +18,20 @@ namespace FlightControlApi.Controllers
     {
 
         IRepository<Flight> repo;
-        IRepository<FlightVM> repoVM;
         IRepository<FlightWithTickets> repoTickets;
 
         public FlightController()
         {
 
             repo = new Repository<Flight>();
-            repoVM = new Repository<FlightVM>();
             repoTickets = new Repository<FlightWithTickets>();
         }
 
         [HttpGet]
         [Route("flight")]
-        public IEnumerable<FlightVM> Get()
+        public IEnumerable<Flight> Get()
         {
-            IEnumerable<FlightVM> flights = repoVM.FindAll();
+            IEnumerable<Flight> flights = repo.FindAll();
             
             return flights;
         }
