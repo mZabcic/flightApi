@@ -13,6 +13,8 @@
     <property name="ArrTime" />
     <property name="Canceled" />
     <property name="Price" />
+    <many-to-one name="Pilot" lazy="false"  class="Pilot" column="PilotId" insert="false" update="false"/>
+    <many-to-one name="Plane" lazy="false"  class="Plane" column="PlaneId" insert="false" update="false"/>
 
 
   </class>

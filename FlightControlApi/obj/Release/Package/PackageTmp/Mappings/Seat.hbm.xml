@@ -9,7 +9,8 @@
     <property name="Num"  />
     <property name="PlaneId" />
     <property name="SeatClassId" />
-
+    <many-to-one name="SeatClass" lazy="false"  class="SeatClass" column="SeatClassId" insert="false" update="false"/>
+    <many-to-one name="Plane" lazy="false"  class="Plane" column="PlaneId" insert="false" update="false"/>
 
   </class>
 </hibernate-mapping>

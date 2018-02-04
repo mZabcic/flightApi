@@ -10,6 +10,7 @@
     <property name="Address" />
     <property name="ZipCode" />
     <property name="CountryId" />
+    <many-to-one name="Country" lazy="false"  class="Country" column="CountryId" insert="false" update="false"/>
 
 
   </class>

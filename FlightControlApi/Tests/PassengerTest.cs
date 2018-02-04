@@ -48,9 +48,9 @@ namespace FlightControlApi.Tests
 
                 {
 
-                    new Country { Id = 1, name = "Croatia", iso="HR", iso3="CRO", numcode=385, printable_name="Republika Hrvatska", airports = null },
-                    new Country { Id = 2, name = "Slovenia", iso="SV", iso3="SLO", numcode=386, printable_name="Republika Slovenija", airports = null },
-                    new Country { Id = 3, name = "Bosnia and Herzegovina", iso="BH", iso3="BIH", numcode=384, printable_name="Bosna i Hercegovina", airports = null }
+                    new Country { Id = 1, name = "Croatia", iso="HR", iso3="CRO", numcode=385, printable_name="Republika Hrvatska" },
+                    new Country { Id = 2, name = "Slovenia", iso="SV", iso3="SLO", numcode=386, printable_name="Republika Slovenija"},
+                    new Country { Id = 3, name = "Bosnia and Herzegovina", iso="BH", iso3="BIH", numcode=384, printable_name="Bosna i Hercegovina" }
         };
 
 

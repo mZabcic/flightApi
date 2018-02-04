@@ -11,10 +11,7 @@
     <property name="printable_name" />
     <property name="iso3" />
     <property name="numcode" />
-    <set name="airports" lazy="false" inverse="true"  cascade="save-update">
-      <key column="CountryId"/>
-      <one-to-many class="Airport" />
-    </set>
+  
     
   </class>
 </hibernate-mapping>

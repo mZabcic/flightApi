@@ -13,12 +13,12 @@
     <property name="ArrTime" />
     <property name="Canceled" />
     <property name="Price" />
-    <many-to-one name="Route" lazy="false"  class="RouteVM" column="RouteId" cascade="save-update"/>
+    <many-to-one name="Route" lazy="false"  class="Route" column="RouteId" cascade="save-update"/>
     <many-to-one name="Pilot" lazy="false"  class="Pilot" column="PilotId" cascade="save-update"/>
     <many-to-one name="Plane" lazy="false"  class="Plane" column="PlaneId" cascade="save-update"/>
     <set name="Tickets" lazy="false" inverse="true"  cascade="save-update">
       <key column="FlightId"/>
-      <one-to-many class="TicketVM"/>
+      <one-to-many class="Ticket"/>
     </set>
 
   </class>
