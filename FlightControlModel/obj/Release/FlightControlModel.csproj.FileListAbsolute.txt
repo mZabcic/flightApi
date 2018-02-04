@@ -1,0 +1,17 @@
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\FlightControlModel.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\FlightControlModel.pdb
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Castle.Core.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Microsoft.VisualStudio.TestTools.UITest.Extension.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Moq.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\System.Threading.Tasks.Extensions.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\System.ValueTuple.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Microsoft.VisualStudio.OLE.Interop.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Castle.Core.xml
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Moq.pdb
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\Moq.xml
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\bin\Release\System.Threading.Tasks.Extensions.xml
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\obj\Release\FlightControlModel.csprojResolveAssemblyReference.cache
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\obj\Release\FlightControlModel.Properties.Resources.resources
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\obj\Release\FlightControlModel.csproj.GenerateResource.Cache
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\obj\Release\FlightControlModel.dll
+C:\Users\Natko Biscan\Downloads\flightApi\FlightControlModel\obj\Release\FlightControlModel.pdb

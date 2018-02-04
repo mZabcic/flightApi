@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B061ACB6-7B5A-4ECD-99C9-953376972311}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>FlightControlWinForms</RootNamespace>
+    <AssemblyName>FlightControlWinForms</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddForms\FormAddAirport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddAirport.Designer.cs">
+      <DependentUpon>FormAddAirport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddFlight.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddFlight.Designer.cs">
+      <DependentUpon>FormAddFlight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddPassenger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddPassenger.Designer.cs">
+      <DependentUpon>FormAddPassenger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddPilot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddPilot.Designer.cs">
+      <DependentUpon>FormAddPilot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddPlane.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddPlane.Designer.cs">
+      <DependentUpon>FormAddPlane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddRoute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddRoute.Designer.cs">
+      <DependentUpon>FormAddRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddSeat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddSeat.Designer.cs">
+      <DependentUpon>FormAddSeat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddStore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddStore.Designer.cs">
+      <DependentUpon>FormAddStore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddForms\FormAddTicket.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddForms\FormAddTicket.Designer.cs">
+      <DependentUpon>FormAddTicket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditAirport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditAirport.Designer.cs">
+      <DependentUpon>FormEditAirport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditCountry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditCountry.Designer.cs">
+      <DependentUpon>FormEditCountry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditPassenger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditPassenger.Designer.cs">
+      <DependentUpon>FormEditPassenger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditPilot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditPilot.Designer.cs">
+      <DependentUpon>FormEditPilot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditPlane.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditPlane.Designer.cs">
+      <DependentUpon>FormEditPlane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditRoute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditRoute.Designer.cs">
+      <DependentUpon>FormEditRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditSeat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditSeat.Designer.cs">
+      <DependentUpon>FormEditSeat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditSeatClass.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditSeatClass.Designer.cs">
+      <DependentUpon>FormEditSeatClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditStore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditStore.Designer.cs">
+      <DependentUpon>FormEditStore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditTicket.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditTicket.Designer.cs">
+      <DependentUpon>FormEditTicket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMainWindow.Designer.cs">
+      <DependentUpon>FormMainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditForms\FormEditFlights.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditForms\FormEditFlights.Designer.cs">
+      <DependentUpon>FormEditFlights.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\IMainController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="AppStarter\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddForms\FormAddAirport.resx">
+      <DependentUpon>FormAddAirport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddFlight.resx">
+      <DependentUpon>FormAddFlight.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddPassenger.resx">
+      <DependentUpon>FormAddPassenger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddPilot.resx">
+      <DependentUpon>FormAddPilot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddPlane.resx">
+      <DependentUpon>FormAddPlane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddRoute.resx">
+      <DependentUpon>FormAddRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddSeat.resx">
+      <DependentUpon>FormAddSeat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddStore.resx">
+      <DependentUpon>FormAddStore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddForms\FormAddTicket.resx">
+      <DependentUpon>FormAddTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditAirport.resx">
+      <DependentUpon>FormEditAirport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditCountry.resx">
+      <DependentUpon>FormEditCountry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditPassenger.resx">
+      <DependentUpon>FormEditPassenger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditPilot.resx">
+      <DependentUpon>FormEditPilot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditPlane.resx">
+      <DependentUpon>FormEditPlane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditRoute.resx">
+      <DependentUpon>FormEditRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditSeat.resx">
+      <DependentUpon>FormEditSeat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditSeatClass.resx">
+      <DependentUpon>FormEditSeatClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditStore.resx">
+      <DependentUpon>FormEditStore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditTicket.resx">
+      <DependentUpon>FormEditTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMainWindow.resx">
+      <DependentUpon>FormMainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForms\FormEditFlights.resx">
+      <DependentUpon>FormEditFlights.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlightControlModel\FlightControlModel.csproj">
+      <Project>{23b5efed-d66f-48cf-a026-7461704e7de8}</Project>
+      <Name>FlightControlModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
